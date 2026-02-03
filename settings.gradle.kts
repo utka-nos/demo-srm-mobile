@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DiplomaApp"
+rootProject.name = "SynApp"
 include(":app")

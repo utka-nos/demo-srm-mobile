@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">DiplomaApp</string>
+    <string name="app_name">SynApp</string>
     <string name="hello_message">Привет! Это стартовый экран дипломного приложения.</string>
 </resources>
