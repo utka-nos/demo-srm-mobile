@@ -1,0 +1,5 @@
+query GetTrade($id: Long!) {
+  trade(id: $id) {
+    ...TradeFields
+  }
+}

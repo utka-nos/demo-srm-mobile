@@ -1,0 +1,5 @@
+query GetOrganization($id: Long!) {
+  organization(id: $id) {
+    ...OrganizationFields
+  }
+}

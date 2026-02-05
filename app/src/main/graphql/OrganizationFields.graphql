@@ -1,0 +1,30 @@
+fragment OrganizationFields on Organization {
+  department
+  departmentTopOrganization {
+    id
+    title
+  }
+  email
+  id
+  inn
+  kpp
+  ogrn
+  phone
+  representatives {
+    id
+    login
+    title
+  }
+  taxCode
+  taxCodeTitle
+  title
+  topSuperOrganization {
+    id
+    title
+  }
+  types {
+    code
+    id
+    title
+  }
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_profile"
+        android:title="@string/menu_profile" />
+    <item
+        android:id="@+id/nav_organization"
+        android:title="@string/menu_organization" />
+    <item
+        android:id="@+id/nav_trades"
+        android:title="@string/menu_trades" />
+
+    <group android:id="@+id/auth_group">
+        <item
+            android:id="@+id/nav_login"
+            android:title="@string/menu_login" />
+        <item
+            android:id="@+id/nav_logout"
+            android:title="@string/menu_logout"
+            android:visible="false" />
+    </group>
+</menu>

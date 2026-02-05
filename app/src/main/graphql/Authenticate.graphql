@@ -1,0 +1,8 @@
+mutation Authenticate($dto: AuthenticateDtoInput!) {
+  authenticate(dto: $dto) {
+    success
+    error
+    jwtToken
+    result
+  }
+}

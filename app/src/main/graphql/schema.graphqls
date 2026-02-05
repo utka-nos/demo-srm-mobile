@@ -1,0 +1,101 @@
+type Query {
+  trade(id: Long!): Trade
+  user(id: Long!): User
+  organization(id: Long!): Organization
+}
+
+type Mutation {
+    authenticate(dto: AuthenticateDtoInput): AuthenticatePayload
+}
+
+type Trade {
+  id: Long
+  title: String
+  completionDate: Long
+}
+
+type Group {
+  code: String
+  id: Long
+  members: [User]
+  title: String
+}
+
+type User {
+  email: String
+  id: Long
+  login: String
+  notificationEmails: [String]
+  organization: Organization
+  organizations: [Organization]
+  personName: PersonName
+  personNames: [PersonName]
+  phone: String
+  title: String
+}
+
+type PersonName {
+  dateOfBirth: Long
+  firstName: String
+  lastName: String
+  middleName: String
+  id: Long
+}
+
+type Organization {
+  department: Boolean
+  departmentTopOrganization: Organization
+  email: String
+  id: Long
+  inn: String @deprecated(reason: "use 'taxCode' instead")
+  kpp: String
+  ogrn: String @deprecated(reason: "use 'registrationCode' instead")
+  phone: String
+  representatives: [User]
+  taxCode: String
+  taxCodeTitle: String
+  title: String
+  topSuperOrganization: Organization
+  types: [OrganizationType]
+}
+
+type OrganizationType {
+  code: String
+  id: Long
+  title: String
+}
+
+type Currency {
+  code: String
+  id: Long
+  letterCode: String
+  rateGrowPercent: BigDecimal
+  title: String
+  digitalCode: String
+}
+
+input AuthenticateDtoInput {
+    captchaResponse: String
+    login: String
+    password: String
+    personalDataAgreementAccept: Boolean
+    signature: String
+}
+
+type AuthenticatePayload {
+    error: String
+    jwtToken: String
+    personalDataAgreementAcceptanceUpdateRequired: Boolean
+    result: AuthenticationResult
+    success: Boolean
+}
+
+enum AuthenticationResult {
+    FAILURE
+    NEED_ONE_TIME_TOKEN_CODE
+    SUCCESS
+}
+
+scalar Long
+scalar BigDecimal
+scalar Instant

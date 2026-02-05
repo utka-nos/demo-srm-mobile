@@ -1,0 +1,7 @@
+fragment PersonNameFields on PersonName {
+  id
+  firstName
+  lastName
+  middleName
+  dateOfBirth
+}

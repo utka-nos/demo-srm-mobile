@@ -1,0 +1,26 @@
+fragment UserFields on User {
+  email
+  id
+  login
+  notificationEmails
+  organization {
+    id
+    title
+  }
+  organizations {
+    id
+    title
+  }
+  personName {
+    id
+    firstName
+    lastName
+  }
+  personNames {
+    id
+    firstName
+    lastName
+  }
+  phone
+  title
+}
