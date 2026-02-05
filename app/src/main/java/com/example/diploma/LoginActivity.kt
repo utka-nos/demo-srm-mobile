@@ -1,5 +1,6 @@
 package com.example.diploma
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -11,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.diploma.type.AuthenticateDtoInput
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -43,10 +43,17 @@ class LoginActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     val result = viewModel.login(login, password)
                     progressBar.visibility = View.GONE
-                    if (result) {
-                        finish()
-                    } else {
-                        Toast.makeText(this@LoginActivity, "Ошибка аутентификации", Toast.LENGTH_SHORT).show()
+                    
+                    when (result) {
+                        is LoginViewModel.LoginResult.Success -> {
+                            val intent = Intent(this@LoginActivity, TradesActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                        is LoginViewModel.LoginResult.Error -> {
+                            Toast.makeText(this@LoginActivity, result.message, Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             } else {
