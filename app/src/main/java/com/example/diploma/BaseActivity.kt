@@ -56,6 +56,9 @@ abstract class BaseActivity : AppCompatActivity() {
                 R.id.nav_trades -> {
                     if (this !is TradesActivity) startActivity(Intent(this, TradesActivity::class.java))
                 }
+                R.id.nav_notifications -> {
+                    if (this !is NotificationsActivity) startActivity(Intent(this, NotificationsActivity::class.java))
+                }
                 R.id.nav_login -> {
                     startActivity(Intent(this, LoginActivity::class.java))
                 }

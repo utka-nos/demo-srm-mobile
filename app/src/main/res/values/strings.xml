@@ -4,6 +4,7 @@
     <string name="menu_profile">Мой профиль</string>
     <string name="menu_organization">Моя организация</string>
     <string name="menu_trades">Мои торги</string>
+    <string name="menu_notifications">Мои уведомления</string>
     <string name="navigation_drawer_open">Открыть меню</string>
     <string name="navigation_drawer_close">Закрыть меню</string>
     <string name="menu_login">Войти</string>
