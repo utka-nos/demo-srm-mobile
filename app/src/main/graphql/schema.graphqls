@@ -176,6 +176,7 @@ type AuthenticatePayload {
     personalDataAgreementAcceptanceUpdateRequired: Boolean
     result: AuthenticationResult
     success: Boolean
+    currentUserId: Long
 }
 
 enum AuthenticationResult {

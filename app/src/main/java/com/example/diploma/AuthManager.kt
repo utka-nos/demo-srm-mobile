@@ -9,12 +9,14 @@ class AuthManager(context: Context) {
     companion object {
         private const val KEY_JWT_TOKEN = "jwt_token"
         private const val KEY_USER_LOGIN = "user_login"
+        private const val KEY_USER_PASSWORD = "user_id"
     }
 
-    fun saveAuthData(token: String, login: String) {
+    fun saveAuthData(token: String, login: String, userId: String) {
         prefs.edit()
             .putString(KEY_JWT_TOKEN, token)
             .putString(KEY_USER_LOGIN, login)
+            .putString(KEY_USER_PASSWORD, userId)
             .apply()
     }
 

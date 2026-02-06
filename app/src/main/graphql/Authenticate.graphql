@@ -4,5 +4,6 @@ mutation Authenticate($dto: AuthenticateDtoInput!) {
     error
     jwtToken
     result
+    currentUserId
   }
 }

@@ -25,7 +25,7 @@ class LoginViewModel(private val authManager: AuthManager) : ViewModel() {
 
             val payload = response.data?.authenticate
             if (payload?.success == true && payload.jwtToken != null) {
-                authManager.saveAuthData(payload.jwtToken, login)
+                authManager.saveAuthData(payload.jwtToken, login, payload.currentUserId.toString())
                 LoginResult.Success
             } else {
                 LoginResult.Error("Неверный логин или пароль")
