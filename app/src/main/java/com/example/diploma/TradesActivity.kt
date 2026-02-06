@@ -3,18 +3,25 @@ package com.example.diploma
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.apollographql.apollo3.api.Optional
 import com.example.diploma.type.TradeQueryDtoInput
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class TradesActivity : BaseActivity() {
 
     private lateinit var adapter: TradesAdapter
     private lateinit var progressBar: ProgressBar
+    private lateinit var errorLayout: LinearLayout
+    private lateinit var errorTextView: TextView
+    private lateinit var retryButton: Button
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +38,10 @@ class TradesActivity : BaseActivity() {
         supportActionBar?.title = getString(R.string.menu_trades)
 
         progressBar = findViewById(R.id.tradesProgressBar)
-        val recyclerView: RecyclerView = findViewById(R.id.tradesRecyclerView)
+        errorLayout = findViewById(R.id.errorLayout)
+        errorTextView = findViewById(R.id.errorTextView)
+        retryButton = findViewById(R.id.retryButton)
+        recyclerView = findViewById(R.id.tradesRecyclerView)
         
         adapter = TradesAdapter(emptyList()) { tradeId ->
             val intent = Intent(this, TradeInfoActivity::class.java)
@@ -40,30 +50,58 @@ class TradesActivity : BaseActivity() {
         }
         recyclerView.adapter = adapter
 
+        retryButton.setOnClickListener {
+            loadTrades()
+        }
+
         loadTrades()
     }
 
     private fun loadTrades() {
-        progressBar.visibility = View.VISIBLE
+        showLoading()
         
         lifecycleScope.launch {
             try {
                 val apolloClient = ApolloInstance.getApolloClient(authManager)
                 val response = apolloClient.query(TradesQuery(Optional.present(TradeQueryDtoInput()))).execute()
                 
-                val tradesList = response.data?.trades?.items?.filterNotNull() ?: emptyList()
-                
                 if (response.hasErrors()) {
-                    Toast.makeText(this@TradesActivity, "Ошибка сервера: ${response.errors?.first()?.message}", Toast.LENGTH_LONG).show()
+                    showError("Ошибка сервера: ${response.errors?.first()?.message}")
                 } else {
-                    adapter.updateData(tradesList)
+                    val tradesList = response.data?.trades?.items?.filterNotNull() ?: emptyList()
+                    if (tradesList.isEmpty()) {
+                        showError("Торги не найдены")
+                    } else {
+                        showContent()
+                        adapter.updateData(tradesList)
+                    }
                 }
-            } catch (e: Exception) {
-                Toast.makeText(this@TradesActivity, "Ошибка при загрузке: ${e.message}", Toast.LENGTH_LONG).show()
+            } catch (e: IOException) {
+                showError("Ошибка сети. Проверьте подключение к интернету.")
                 e.printStackTrace()
-            } finally {
-                progressBar.visibility = View.GONE
+            } catch (e: Exception) {
+                showError("Произошла непредвиденная ошибка: ${e.message}")
+                e.printStackTrace()
             }
         }
+    }
+
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        errorLayout.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun showContent() {
+        progressBar.visibility = View.GONE
+        errorLayout.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
+    private fun showError(message: String) {
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+        errorLayout.visibility = View.VISIBLE
+        errorTextView.text = message
     }
 }
