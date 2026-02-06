@@ -52,7 +52,7 @@ class PushTokenRegistrar(context: Context) {
 
     companion object {
         // Endpoint on backend-server for saving FCM token by authenticated user.
-        private const val PUSH_TOKEN_URL = "http://10.0.2.2:8080/api/mobile/push-tokens"
+        private const val PUSH_TOKEN_URL = "http://10.0.2.2:8081/api/mobile/push-tokens"
         private const val TAG = "PushTokenRegistrar"
     }
 }

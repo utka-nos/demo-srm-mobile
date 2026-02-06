@@ -2,6 +2,7 @@ package com.example.diploma
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,7 @@ class NotificationsActivity : BaseActivity() {
         }
 
         setupRecyclerView()
+        syncNotifications()
         observeNotifications()
     }
 
@@ -61,8 +63,26 @@ class NotificationsActivity : BaseActivity() {
         }
     }
 
+    private fun syncNotifications() {
+        lifecycleScope.launch {
+            when (val result = repository.syncNotifications()) {
+                NotificationRepository.SyncNotificationsResult.Success -> Unit
+                NotificationRepository.SyncNotificationsResult.NotImplemented -> {
+                    Log.d(TAG, "syncNotifications() is not implemented yet")
+                }
+                is NotificationRepository.SyncNotificationsResult.Error -> {
+                    Log.w(TAG, "syncNotifications() failed: ${result.message}")
+                }
+            }
+        }
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         finish()
         return true
+    }
+
+    companion object {
+        private const val TAG = "NotificationsActivity"
     }
 }

@@ -23,6 +23,7 @@ class NotificationsAdapter(
         val notification = notifications[position]
         holder.binding.notificationTitle.text = notification.title
         holder.binding.notificationDateTime.text = NotificationDateTime.format(notification.eventTime)
+        holder.binding.notificationText.text = notification.text
         holder.binding.unreadIndicator.visibility = if (notification.isRead) View.GONE else View.VISIBLE
 
         holder.itemView.setOnClickListener {

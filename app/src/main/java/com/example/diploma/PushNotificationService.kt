@@ -24,14 +24,12 @@ class PushNotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         val payload = extractPayload(message) ?: return
+        Log.i(TAG, "Received push notification: $payload")
 
         serviceScope.launch {
             val repository = NotificationRepository(applicationContext)
-            val notificationId = repository.saveFromPush(payload)
-            if (notificationId == -1L) {
-                return@launch
-            }
-            showSystemNotification(payload, notificationId)
+            repository.syncNotifications()
+            showSystemNotification(payload)
         }
     }
 
@@ -66,17 +64,17 @@ class PushNotificationService : FirebaseMessagingService() {
         )
     }
 
-    private fun showSystemNotification(payload: PushPayload, localNotificationId: Long) {
+    private fun showSystemNotification(payload: PushPayload) {
         ensureChannelExists()
+        val requestCode = (System.currentTimeMillis() % Int.MAX_VALUE).toInt()
 
-        val intent = Intent(this, NotificationInfoActivity::class.java).apply {
+        val intent = Intent(this, NotificationsActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-            putExtra(NotificationInfoActivity.EXTRA_NOTIFICATION_ID, localNotificationId)
         }
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            localNotificationId.toInt(),
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
@@ -94,7 +92,7 @@ class PushNotificationService : FirebaseMessagingService() {
             .build()
 
         NotificationManagerCompat.from(this)
-            .notify(localNotificationId.toInt(), notification)
+            .notify(requestCode, notification)
     }
 
     private fun ensureChannelExists() {

@@ -22,27 +22,9 @@ class NotificationRepository(context: Context) {
         }
     }
 
-    suspend fun saveFromPush(payload: PushPayload): Long {
-        val entity = NotificationEntity(
-            externalId = payload.externalId,
-            title = payload.title,
-            text = payload.text,
-            eventTime = payload.eventTime,
-            receivedAt = System.currentTimeMillis(),
-            isRead = false
-        )
-
-        val insertedId = notificationDao.insert(entity)
-        if (insertedId != -1L) {
-            return insertedId
-        }
-
-        val externalId = payload.externalId
-        if (externalId != null) {
-            return notificationDao.findByExternalId(externalId)?.id ?: -1L
-        }
-
-        return -1L
+    suspend fun syncNotifications(): SyncNotificationsResult {
+        // TODO: call backend API/GraphQL endpoint for notifications and upsert into Room.
+        return SyncNotificationsResult.NotImplemented
     }
 
     suspend fun getById(id: Long): Notification? {
@@ -58,5 +40,11 @@ class NotificationRepository(context: Context) {
 
     suspend fun markAsRead(id: Long) {
         notificationDao.markAsRead(id)
+    }
+
+    sealed interface SyncNotificationsResult {
+        data object Success : SyncNotificationsResult
+        data object NotImplemented : SyncNotificationsResult
+        data class Error(val message: String) : SyncNotificationsResult
     }
 }
