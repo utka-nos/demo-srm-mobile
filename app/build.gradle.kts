@@ -37,6 +37,10 @@ android {
         jvmTarget = "17"
     }
     
+    buildFeatures {
+        viewBinding = true
+    }
+    
     apollo {
         service("service") {
             packageName.set("com.example.diploma")

@@ -33,7 +33,11 @@ class TradesActivity : BaseActivity() {
         progressBar = findViewById(R.id.tradesProgressBar)
         val recyclerView: RecyclerView = findViewById(R.id.tradesRecyclerView)
         
-        adapter = TradesAdapter(emptyList())
+        adapter = TradesAdapter(emptyList()) { tradeId ->
+            val intent = Intent(this, TradeInfoActivity::class.java)
+            intent.putExtra("TRADE_ID", tradeId)
+            startActivity(intent)
+        }
         recyclerView.adapter = adapter
 
         loadTrades()

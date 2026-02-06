@@ -7,10 +7,13 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.DecimalFormat
 
-class TradesAdapter(private var trades: List<TradesQuery.Item>) :
-    RecyclerView.Adapter<TradesAdapter.TradeViewHolder>() {
+class TradesAdapter(
+    private var trades: List<TradesQuery.Item>,
+    private val onItemClick: (String) -> Unit
+) : RecyclerView.Adapter<TradesAdapter.TradeViewHolder>() {
 
     class TradeViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val container: View = view
         val number: TextView = view.findViewById(R.id.tradeRegisteredNumber)
         val title: TextView = view.findViewById(R.id.tradeTitle)
         val status: TextView = view.findViewById(R.id.tradeStatus)
@@ -38,6 +41,10 @@ class TradesAdapter(private var trades: List<TradesQuery.Item>) :
         
         val formatter = DecimalFormat("#,###.## ₽")
         holder.price.text = formatter.format(totalPrice)
+
+        holder.container.setOnClickListener {
+            trade.id?.let { id -> onItemClick(id.toString()) }
+        }
     }
 
     override fun getItemCount() = trades.size

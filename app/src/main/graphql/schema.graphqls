@@ -17,6 +17,50 @@ type Trade {
     organizer: Organization
     lots: [Lot]
     registeredNumber: String
+    targetUser: User
+    procurementClassifier: [ProcurementClassifier]
+    destinationRegion: [KLADRClassifier]
+    procurementMethod: ProcurementMethod
+    tradeReasoning: String
+    participationConfirmationStartDate: Long
+    participationConfirmationEndDate: Long
+    bidSubmissionStartDate: Long
+    bidSubmissionEndDate: Long
+}
+
+type PurchaseItem {
+    id: Long
+    title: String
+    procurementClassifier: [ProcurementClassifier]
+    quantity: BigDecimal
+    unit: Unit
+    code: String
+    price: BigDecimal
+}
+
+type Unit {
+    code: String
+    id: Long
+    title: String
+}
+
+type KLADRClassifier {
+    code: String
+    fullTitle: String
+    id: Long
+    title: String
+}
+
+type ProcurementClassifier {
+    title: String
+    code: String
+    id: Long
+}
+
+type ProcurementMethod {
+    code: String
+    id: Long
+    title: String
 }
 
 type Group {
@@ -27,8 +71,34 @@ type Group {
 }
 
 type Lot {
+    id: Long
     initialContractPrice: BigDecimal
     title: String
+    vatType: VatType
+    purchaseItems: [PurchaseItem]
+}
+
+enum VatType {
+    EXCLUDED
+    EXCLUDED_0
+    EXCLUDED_10
+    EXCLUDED_18
+    EXCLUDED_20
+    EXCLUDED_22
+    INCLUDED
+    INCLUDED_0
+    INCLUDED_10
+    INCLUDED_18
+    INCLUDED_20
+    INCLUDED_22
+    MIXED
+    NA
+    EXCLUDED_5
+    EXCLUDED_7
+    EXCLUDED_NA
+    INCLUDED_5
+    INCLUDED_7
+    INCLUDED_NA
 }
 
 type User {
@@ -41,6 +111,7 @@ type User {
     personName: PersonName
     personNames: [PersonName]
     phone: String
+    position: String
     title: String
 }
 

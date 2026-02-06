@@ -24,6 +24,7 @@
         <activity android:name=".OrganizationActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".NotificationsActivity" />
+        <activity android:name=".TradeInfoActivity" />
     </application>
 
 </manifest>

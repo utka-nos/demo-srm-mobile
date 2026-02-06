@@ -1,0 +1,37 @@
+query Trade($id: Long!) {
+    trade(id: $id) {
+        id
+        title
+        registeredNumber
+        tradeReasoning
+        completionDate
+        participationConfirmationStartDate
+        participationConfirmationEndDate
+        bidSubmissionStartDate
+        bidSubmissionEndDate
+        organizer {
+            title
+            taxCode
+            kpp
+        }
+        targetUser {
+            title
+            position
+            email
+            phone
+            organization {
+                title
+            }
+        }
+        procurementClassifier {
+            code
+            title
+        }
+        destinationRegion {
+            title
+        }
+        procurementMethod {
+            title
+        }
+    }
+}
