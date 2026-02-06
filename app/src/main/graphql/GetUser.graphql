@@ -1,5 +1,30 @@
 query GetUser($id: Long!) {
-  user(id: $id) {
-    ...UserFields
-  }
+    user(id: $id) {
+        chief {
+            email
+            title
+        }
+        email
+        dateCreated
+        id
+        login
+        notificationEmails
+        organization {
+            taxCode
+            title
+            id
+        }
+        personName {
+            dateOfBirth
+            firstName
+            lastName
+            middleName
+        }
+        phone
+        position
+        title
+        groups {
+            title
+        }
+    }
 }

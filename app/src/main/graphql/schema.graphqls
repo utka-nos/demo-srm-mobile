@@ -114,6 +114,9 @@ type User {
     phone: String
     position: String
     title: String
+    chief: User
+    dateCreated: Long
+    groups: [Group]
 }
 
 type PersonName {
