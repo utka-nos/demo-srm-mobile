@@ -76,6 +76,7 @@ type Lot {
     title: String
     vatType: VatType
     purchaseItems: [PurchaseItem]
+    currency: Currency
 }
 
 enum VatType {

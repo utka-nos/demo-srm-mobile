@@ -33,5 +33,30 @@ query Trade($id: Long!) {
         procurementMethod {
             title
         }
+        lots {
+            id
+            initialContractPrice
+            vatType
+            currency {
+                code
+                title
+            }
+            purchaseItems {
+                id
+                title
+                procurementClassifier {
+                    id
+                    title
+                    code
+                }
+                quantity
+                unit {
+                    id
+                    code
+                    title
+                }
+                price
+            }
+        }
     }
 }

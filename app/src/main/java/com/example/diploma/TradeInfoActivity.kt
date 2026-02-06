@@ -2,12 +2,16 @@ package com.example.diploma
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.diploma.databinding.ActivityTradeInfoBinding
+import com.example.diploma.databinding.ItemLotBinding
+import com.example.diploma.databinding.ItemPurchaseItemBinding
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -18,6 +22,7 @@ class TradeInfoActivity : AppCompatActivity() {
     private lateinit var authManager: AuthManager
     
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val moneyFormat = DecimalFormat("#,##0.00")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,19 +72,17 @@ class TradeInfoActivity : AppCompatActivity() {
 
         // Organizer
         trade.organizer?.let { org ->
-            val orgTitle = org.title ?: "---"
-            binding.orgName.text = orgTitle
+            binding.orgName.text = org.title ?: "---"
             binding.orgTaxInfo.text = "ИНН: ${org.taxCode ?: "---"} | КПП: ${org.kpp ?: "---"}"
         }
 
         // Buyer / Target User
         trade.targetUser?.let { user ->
-            val userTitle = user.title ?: "---"
-            binding.buyerName.text = userTitle
+            binding.buyerName.text = user.title ?: "---"
             binding.buyerOrg.text = user.organization?.title ?: "---"
             
             // Detailed contact info
-            binding.contactPerson.text = userTitle
+            binding.contactPerson.text = user.title ?: "---"
             binding.contactPosition.text = user.position ?: "---"
             binding.contactEmail.text = user.email ?: "---"
             binding.contactPhone.text = user.phone ?: "---"
@@ -99,6 +102,47 @@ class TradeInfoActivity : AppCompatActivity() {
         binding.dateBidEnd.text = formatDate(trade.bidSubmissionEndDate)
         binding.datePartStart.text = formatDate(trade.participationConfirmationStartDate)
         binding.datePartEnd.text = formatDate(trade.participationConfirmationEndDate)
+
+        // Lots
+        binding.lotsContainer.removeAllViews()
+        trade.lots?.filterNotNull()?.forEachIndexed { index, lot ->
+            val lotBinding = ItemLotBinding.inflate(layoutInflater, binding.lotsContainer, false)
+            
+            lotBinding.lotTitle.text = "Лот №${index + 1}"
+            
+            val price = lot.initialContractPrice?.toString()?.toDoubleOrNull() ?: 0.0
+            val currency = lot.currency?.title ?: "₽"
+            lotBinding.lotPrice.text = "${moneyFormat.format(price)} $currency"
+            lotBinding.lotVat.text = lot.vatType?.name ?: "---"
+
+            // Purchase Items for this Lot
+            lotBinding.purchaseItemsContainer.removeAllViews()
+            lot.purchaseItems?.filterNotNull()?.forEach { item ->
+                val itemBinding = ItemPurchaseItemBinding.inflate(layoutInflater, lotBinding.purchaseItemsContainer, false)
+                
+                itemBinding.itemTitle.text = item.title ?: "Без названия"
+                
+                val itemClassifier = item.procurementClassifier?.firstOrNull()
+                itemBinding.itemClassifier.text = 
+                    if (itemClassifier != null) "(${itemClassifier.code ?: ""}) ${itemClassifier.title ?: ""}" else "---"
+                
+                val quantity = item.quantity?.toString() ?: "0"
+                val unit = item.unit?.title ?: ""
+                itemBinding.itemQuantity.text = "Кол-во: $quantity $unit"
+                
+                val itemPrice = item.price?.toString()?.toDoubleOrNull()
+                if (itemPrice == null || itemPrice == 0.0) {
+                    itemBinding.itemPrice.visibility = View.GONE
+                } else {
+                    itemBinding.itemPrice.visibility = View.VISIBLE
+                    itemBinding.itemPrice.text = "${moneyFormat.format(itemPrice)} $currency"
+                }
+                
+                lotBinding.purchaseItemsContainer.addView(itemBinding.root)
+            }
+
+            binding.lotsContainer.addView(lotBinding.root)
+        }
     }
 
     private fun formatDate(timestamp: Any?): String {
