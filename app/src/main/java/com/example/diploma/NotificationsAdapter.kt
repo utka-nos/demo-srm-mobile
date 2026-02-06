@@ -7,9 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diploma.databinding.ItemNotificationBinding
 
 class NotificationsAdapter(
-    private val notifications: List<Notification>,
     private val onItemClick: (Notification) -> Unit
 ) : RecyclerView.Adapter<NotificationsAdapter.NotificationViewHolder>() {
+
+    private val notifications = mutableListOf<Notification>()
 
     class NotificationViewHolder(val binding: ItemNotificationBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -21,7 +22,7 @@ class NotificationsAdapter(
     override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
         val notification = notifications[position]
         holder.binding.notificationTitle.text = notification.title
-        holder.binding.notificationDateTime.text = notification.dateTime
+        holder.binding.notificationDateTime.text = NotificationDateTime.format(notification.eventTime)
         holder.binding.unreadIndicator.visibility = if (notification.isRead) View.GONE else View.VISIBLE
 
         holder.itemView.setOnClickListener {
@@ -30,4 +31,10 @@ class NotificationsAdapter(
     }
 
     override fun getItemCount(): Int = notifications.size
+
+    fun submitList(items: List<Notification>) {
+        notifications.clear()
+        notifications.addAll(items)
+        notifyDataSetChanged()
+    }
 }

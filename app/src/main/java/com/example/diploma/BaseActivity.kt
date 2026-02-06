@@ -20,6 +20,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         super.setContentView(R.layout.activity_base)
+        NotificationPermissionHelper.requestIfNeeded(this)
 
         authManager = AuthManager(this)
 
@@ -42,6 +43,9 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateNavMenu()
+        if (authManager.isLoggedIn()) {
+            PushNotificationService.syncToken(this)
+        }
     }
 
     private fun setupNavigation(navView: NavigationView) {

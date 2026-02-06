@@ -1,11 +1,9 @@
 package com.example.diploma
 
-import java.io.Serializable
-
 data class Notification(
-    val id: String,
+    val id: Long,
     val title: String,
-    val dateTime: String,
     val text: String,
+    val eventTime: Long,
     var isRead: Boolean
-) : Serializable
+)
