@@ -3,6 +3,7 @@ package com.example.diploma
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -78,8 +79,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun updateNavMenu() {
-        val navView: NavigationView = findViewById(R.id.nav_view)
-        val menu = navView.menu
+        val navView: NavigationView? = findViewById(R.id.nav_view)
+        val menu = navView?.menu ?: return
         val isLoggedIn = authManager.isLoggedIn()
 
         menu.findItem(R.id.nav_login)?.isVisible = !isLoggedIn
@@ -104,9 +105,20 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun setContentView(layoutResID: Int) {
         val contentFrame: FrameLayout? = findViewById(R.id.content_frame)
         if (contentFrame != null) {
+            contentFrame.removeAllViews()
             LayoutInflater.from(this).inflate(layoutResID, contentFrame, true)
         } else {
             super.setContentView(layoutResID)
+        }
+    }
+
+    override fun setContentView(view: View) {
+        val contentFrame: FrameLayout? = findViewById(R.id.content_frame)
+        if (contentFrame != null) {
+            contentFrame.removeAllViews()
+            contentFrame.addView(view)
+        } else {
+            super.setContentView(view)
         }
     }
 }

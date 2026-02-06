@@ -9,4 +9,5 @@
     <string name="navigation_drawer_close">Закрыть меню</string>
     <string name="menu_login">Войти</string>
     <string name="menu_logout">Выйти</string>
+    <string name="notification_info_title">Уведомление</string>
 </resources>
