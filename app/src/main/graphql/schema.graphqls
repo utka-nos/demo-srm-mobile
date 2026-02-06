@@ -1,7 +1,8 @@
 type Query {
-  trade(id: Long!): Trade
-  user(id: Long!): User
-  organization(id: Long!): Organization
+    trade(id: Long!): Trade
+    user(id: Long!): User
+    organization(id: Long!): Organization
+    trades(limit: Int, skip: Int, tradeQueryDto: TradeQueryDtoInput): PartialResults_Trade
 }
 
 type Mutation {
@@ -9,69 +10,84 @@ type Mutation {
 }
 
 type Trade {
-  id: Long
-  title: String
-  completionDate: Long
+    id: Long
+    title: String
+    completionDate: Long
+    status: TradeStatus
+    organizer: Organization
+    lots: [Lot]
+    registeredNumber: String
 }
 
 type Group {
-  code: String
-  id: Long
-  members: [User]
-  title: String
+    code: String
+    id: Long
+    members: [User]
+    title: String
+}
+
+type Lot {
+    initialContractPrice: BigDecimal
+    title: String
 }
 
 type User {
-  email: String
-  id: Long
-  login: String
-  notificationEmails: [String]
-  organization: Organization
-  organizations: [Organization]
-  personName: PersonName
-  personNames: [PersonName]
-  phone: String
-  title: String
+    email: String
+    id: Long
+    login: String
+    notificationEmails: [String]
+    organization: Organization
+    organizations: [Organization]
+    personName: PersonName
+    personNames: [PersonName]
+    phone: String
+    title: String
 }
 
 type PersonName {
-  dateOfBirth: Long
-  firstName: String
-  lastName: String
-  middleName: String
-  id: Long
+    dateOfBirth: Long
+    firstName: String
+    lastName: String
+    middleName: String
+    id: Long
 }
 
 type Organization {
-  department: Boolean
-  departmentTopOrganization: Organization
-  email: String
-  id: Long
-  inn: String @deprecated(reason: "use 'taxCode' instead")
-  kpp: String
-  ogrn: String @deprecated(reason: "use 'registrationCode' instead")
-  phone: String
-  representatives: [User]
-  taxCode: String
-  taxCodeTitle: String
-  title: String
-  topSuperOrganization: Organization
-  types: [OrganizationType]
+    department: Boolean
+    departmentTopOrganization: Organization
+    email: String
+    id: Long
+    inn: String @deprecated(reason: "use 'taxCode' instead")
+    kpp: String
+    ogrn: String @deprecated(reason: "use 'registrationCode' instead")
+    phone: String
+    representatives: [User]
+    taxCode: String
+    taxCodeTitle: String
+    title: String
+    topSuperOrganization: Organization
+    types: [OrganizationType]
 }
 
 type OrganizationType {
-  code: String
-  id: Long
-  title: String
+    code: String
+    id: Long
+    title: String
+}
+
+type TradeStatus {
+    code: String
+    id: Long
+    title: String
 }
 
 type Currency {
-  code: String
-  id: Long
-  letterCode: String
-  rateGrowPercent: BigDecimal
-  title: String
-  digitalCode: String
+    code: String
+    id: Long
+    letterCode: String
+    rateGrowPercent: BigDecimal
+    title: String
+    digitalCode: String
 }
 
 input AuthenticateDtoInput {
@@ -94,6 +110,36 @@ enum AuthenticationResult {
     FAILURE
     NEED_ONE_TIME_TOKEN_CODE
     SUCCESS
+}
+
+input TradeQueryDtoInput {
+    request: Boolean
+    status: SingularValueMatchDto_TradeStatusDtoInput
+}
+
+type PartialResults_Trade {
+    items: [Trade]
+    limit: Int
+    skipped: Int
+    total: Int
+}
+
+input SingularValueMatchDto_TradeStatusDtoInput {
+    mode: SingularValueMatchMode!
+    values: [TradeStatusDtoInput]!
+}
+
+input TradeStatusDtoInput {
+    code: String
+    id: Long
+}
+
+enum SingularValueMatchMode {
+    IN
+    NOT_IN
+    NOT_NULL
+    NULL
+    NULL_OR_IN
 }
 
 scalar Long

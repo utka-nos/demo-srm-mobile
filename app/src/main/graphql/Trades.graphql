@@ -1,0 +1,23 @@
+query Trades($tradeQueryDto: TradeQueryDtoInput) {
+    trades(tradeQueryDto: $tradeQueryDto) {
+        items {
+            id
+            status {
+                code
+                id
+                title
+            }
+            title
+            organizer {
+                taxCode
+                id
+                title
+            }
+            lots {
+                initialContractPrice
+                title
+            }
+            registeredNumber
+        }
+    }
+}
